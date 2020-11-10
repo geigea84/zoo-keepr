@@ -1,4 +1,5 @@
 const express = require("express");
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 // 1.5 creating a route
@@ -67,6 +68,6 @@ from the res parameter (short for response) to send the
 string Hello! to our client. */
 
 // 1.4 keep this at the bottom
-app.listen(3001, () => {
-    console.log(`API server now on port 3001`);
+app.listen(PORT, () => {
+    console.log(`API server now on port ${PORT}`);
 });
