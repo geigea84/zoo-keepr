@@ -1,6 +1,14 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+// 2.5 parse incoming string or array data
+// (middleware functions)
+app.use(express.urlencoded({extended: true}));
+// 2.5 parse incoming JSON data
+app.use(express.json());
 
 // 1.5 creating a route
 const {animals} = require("./data/animals");
@@ -52,6 +60,36 @@ function findById(id, animalsArray) {
     return result;
 }
 
+// 2.6
+function createNewAnimal(body, animalsArray) {
+    const animal = body;
+    animalsArray.push(animal);
+    fs.writeFileSync(
+        path.join(__dirname, "./data/animals.json"),
+        JSON.stringify({animals: animalsArray}, null, 2)
+    );
+
+    // return finished code to post route for response
+    return animal;
+}
+
+//2.6 data validation
+function validateAnimal(animal) {
+    if (!animal.name || typeof animal.name !== "string") {
+        return false;
+    }
+    if (!animal.species || typeof animal.species !== "string") {
+        return false;
+    }
+    if (!animal.diet || typeof animal.diet !== "string") {
+        return false;
+    }
+    if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+        return false;
+    }
+    return true;
+}
+
 // 1.5 adding the route
 app.get("/api/animals", (req, res) => {
     let results = animals;
@@ -71,6 +109,26 @@ app.get("/api/animals/:id", (req, res) => {
         res.send(404);
     }
 });
+
+/* 2.3 POST requests differ from GET requests in that they 
+represent the action of a client requesting the server to 
+accept data rather than vice versa */
+app.post("/api/animals", (req, res) => {
+    // set id based on what the next index of the array will be
+    req.body.id = animals.length.toString();
+
+    // if any data in req.body is incorrect, send 400 error back
+    if (!validateAnimal(req.body)) {
+        res.status(400).send("The animal is not properly formatted.");
+    }
+    // add animal to json file and animals array in this function
+    else {
+        const animal = createNewAnimal(req.body, animals);
+        res.json(animal);
+    }
+});
+
+// 2.4 Insomnia Core to test API endpoints 
 
 /* 1.5 There are two important takeaways from this code:
 
