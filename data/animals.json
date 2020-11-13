@@ -135,6 +135,15 @@
         "zany"
       ],
       "id": "13"
+    },
+    {
+      "name": "Randy",
+      "species": "Manbearpig",
+      "diet": "folivore",
+      "personalityTraits": [
+        "loving"
+      ],
+      "id": "14"
     }
   ]
 }
