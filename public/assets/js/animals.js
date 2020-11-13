@@ -33,6 +33,7 @@ const getAnimals = (formData = {}) => {
 
   console.log(queryUrl);
 
+  // 3.7
   fetch(queryUrl)
     .then(response => {
       if (!response.ok) {
