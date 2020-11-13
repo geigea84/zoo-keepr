@@ -10,6 +10,14 @@ app.use(express.urlencoded({extended: true}));
 // 2.5 parse incoming JSON data
 app.use(express.json());
 
+// 3.4 connect css and js to html
+/* We added some more middleware to our server and used the 
+express.static() method. The way it works is that we provide 
+a file path to a location in our application (in this case, 
+the public folder) and instruct the server to make these 
+files static resources. */
+app.use(express.static("public"));
+
 // 1.5 creating a route
 const {animals} = require("./data/animals");
 
@@ -141,6 +149,27 @@ a GET request.
 The second takeaway is that we are using the send() method 
 from the res parameter (short for response) to send the 
 string Hello! to our client. */
+
+// 3.4 adding a new route
+/* Unlike most GET and POST routes that deal with creating 
+or return JSON data, this GET route has just one job to do, 
+and that is to respond with an HTML page to display in the 
+browser. So instead of using res.json(), we're using 
+res.sendFile(), and all we have to do is tell them where 
+to find the file we want our server to read and send back 
+to the client. */
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+// 3.6
+app.get("/animals", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/animals.html"));
+});
+
+app.get("/zookeepers", (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/zookeepers.html"));
+});
 
 // 1.4 keep this at the bottom
 app.listen(PORT, () => {
